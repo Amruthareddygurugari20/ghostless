@@ -1,0 +1,190 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-void: #020305;
+  --color-ink: #eef4f2;
+  --color-ink-2: #9aa8a4;
+  --color-ink-3: #6b7976;
+  --color-real: #2ef2b0;
+  --color-maybe: #ffb648;
+  --color-ghost: #9b8cff;
+  --color-edge: #4fd8ff;
+
+  --font-display: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+
+  --breakpoint-desk: 53.75rem; /* 860px */
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #020305;
+  color: #eef4f2;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(46, 242, 176, 0.3);
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid #4fd8ff;
+    outline-offset: 3px;
+  }
+}
+
+/* Dark frosted glass panel */
+@utility glass {
+  background: rgba(10, 14, 18, 0.62);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+  box-shadow:
+    0 40px 90px -30px rgba(0, 0, 0, 0.9),
+    0 18px 40px -18px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+@utility glass-pill {
+  background: rgba(10, 14, 18, 0.55);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+}
+
+/* Subtle star field for parts of the page the canvas doesn't cover */
+.stars-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 68% 8%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1px 1px at 82% 42%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 33% 63%, rgba(200, 255, 240, 0.5), transparent 60%),
+    radial-gradient(1px 1px at 52% 88%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1px 1px at 91% 77%, rgba(255, 255, 255, 0.4), transparent 60%),
+    radial-gradient(1px 1px at 6% 82%, rgba(255, 255, 255, 0.45), transparent 60%),
+    radial-gradient(1px 1px at 44% 31%, rgba(255, 255, 255, 0.35), transparent 60%);
+  background-size: 320px 320px;
+}
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 120% 95% at 55% 50%, transparent 58%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+/* Radar canvas container */
+.radar-canvas {
+  cursor: grab;
+  touch-action: pan-y;
+}
+.radar-canvas canvas.is-dragging,
+.radar-canvas .is-dragging {
+  cursor: grabbing !important;
+}
+
+@media (max-width: 859.98px) {
+  .radar-wrap {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 86%, transparent 100%);
+  }
+}
+
+/* Glass label that follows an orb */
+.orb-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #eef4f2;
+  background: rgba(10, 14, 18, 0.66);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.8);
+  will-change: transform, opacity;
+  transition: opacity 0.25s ease;
+}
+.orb-label span:last-child {
+  font-weight: 600;
+}
+
+/* Pulsing live dot */
+.pulse-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #2ef2b0;
+  box-shadow: 0 0 10px #2ef2b0;
+  flex: none;
+}
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 1px solid #2ef2b0;
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+@keyframes pulse-ring {
+  from {
+    transform: scale(0.5);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+.ghost-word {
+  color: #9b8cff;
+  text-shadow:
+    0 0 18px rgba(155, 140, 255, 0.55),
+    0 0 48px rgba(155, 140, 255, 0.35);
+}
+
+/* Native dialog */
+dialog.glass-dialog {
+  margin: auto;
+  max-width: min(520px, calc(100vw - 32px));
+  width: 100%;
+  color: #eef4f2;
+  padding: 0;
+}
+dialog.glass-dialog::backdrop {
+  background: rgba(2, 3, 5, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot::after {
+    animation: none;
+    opacity: 0;
+  }
+  .orb-label {
+    transition: none;
+  }
+}
