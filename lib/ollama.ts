@@ -33,7 +33,7 @@ async function pickModel(): Promise<string> {
     const res = await fetch(`${BASE}/api/tags`, { signal: AbortSignal.timeout(1500), cache: "no-store" });
     data = await res.json();
   } catch {
-    throw new OllamaError("unavailable", "Local AI is off. Start Ollama to add an AI review of each posting.");
+    throw new OllamaError("unavailable", "AI review is off here. It runs when Ghostless uses Ollama on your own computer.");
   }
   const chat = (data.models ?? []).filter(
     (m) => !/embed/i.test(m.name) && (!m.capabilities || m.capabilities.includes("completion"))

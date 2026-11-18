@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
     return error(
       503,
       "missing_key",
-      "Job search isn't set up yet: add ADZUNA_APP_ID and ADZUNA_APP_KEY to .env.local, then restart the dev server."
+      "Live job search isn't switched on yet. The radar is showing sample data for now."
     );
   }
 
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
       cache: "no-store",
     });
     if (res.status === 401 || res.status === 403) {
-      return error(502, "bad_key", "Adzuna rejected the API key. Check ADZUNA_APP_ID and ADZUNA_APP_KEY in .env.local.");
+      return error(502, "bad_key", "Live job search is misconfigured (the job service rejected its key).");
     }
     if (!res.ok) return error(502, "upstream", `The job search service returned an error (${res.status}). Try again in a moment.`);
     data = await res.json();
